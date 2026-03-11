@@ -1,10 +1,11 @@
+import java.util.Arrays;
 import java.util.List;
 
 public class Interpreter {
 
-    private Collection<String> stack;
+    private Collection<byte[]> stack;
 
-    public Interpreter(Collection<String> stack) {
+    public Interpreter(Collection<byte[]> stack) {
         this.stack = stack;
     }
 
@@ -25,54 +26,54 @@ public class Interpreter {
         }
 
         // criterio de éxito
-        String result = stack.peek();
-        return result != null && !result.equals("0");
+        byte[] result = stack.peek();
+        return result != null && result.length != 0 && !(result.length == 1 && result[0] == 0);
     }
 
     private boolean executeOpCode(OpCode op) {
 
         switch (op) {
 
-            case OP_0:  stack.push("0");  return true;
-            case OP_1:  stack.push("1");  return true;
-            case OP_2:  stack.push("2");  return true;
-            case OP_3:  stack.push("3");  return true;
-            case OP_4:  stack.push("4");  return true;
-            case OP_5:  stack.push("5");  return true;
-            case OP_6:  stack.push("6");  return true;
-            case OP_7:  stack.push("7");  return true;
-            case OP_8:  stack.push("8");  return true;
-            case OP_9:  stack.push("9");  return true;
-            case OP_10: stack.push("10"); return true;
-            case OP_11: stack.push("11"); return true;
-            case OP_12: stack.push("12"); return true;
-            case OP_13: stack.push("13"); return true;
-            case OP_14: stack.push("14"); return true;
-            case OP_15: stack.push("15"); return true;
-            case OP_16: stack.push("16"); return true;
+            case OP_0:  stack.push(new byte[]{0});  return true;
+            case OP_1:  stack.push(new byte[]{1});  return true;
+            case OP_2:  stack.push(new byte[]{2});  return true;
+            case OP_3:  stack.push(new byte[]{3});  return true;
+            case OP_4:  stack.push(new byte[]{4});  return true;
+            case OP_5:  stack.push(new byte[]{5});  return true;
+            case OP_6:  stack.push(new byte[]{6});  return true;
+            case OP_7:  stack.push(new byte[]{7});  return true;
+            case OP_8:  stack.push(new byte[]{8});  return true;
+            case OP_9:  stack.push(new byte[]{9});  return true;
+            case OP_10: stack.push(new byte[]{10}); return true;
+            case OP_11: stack.push(new byte[]{11}); return true;
+            case OP_12: stack.push(new byte[]{12}); return true;
+            case OP_13: stack.push(new byte[]{13}); return true;
+            case OP_14: stack.push(new byte[]{14}); return true;
+            case OP_15: stack.push(new byte[]{15}); return true;
+            case OP_16: stack.push(new byte[]{16}); return true;
 
             case OP_DROP:
-                String dropped = stack.pop();
+                byte[] dropped = stack.pop();
                 return dropped != null;
 
             case OP_DUP:
-                String top = stack.peek();
+                byte[] top = stack.peek();
                 if (top == null) return false;
-                stack.push(top);
+                stack.push(top.clone());
                 return true;
 
             case OP_EQUAL:
-                String a = stack.pop();
-                String b = stack.pop();
+                byte[] a = stack.pop();
+                byte[] b = stack.pop();
                 if (a == null || b == null) return false;
-                stack.push(a.equals(b) ? "1" : "0");
+                stack.push(Arrays.equals(a,b) ? new byte[]{1} : new byte[]{0});
                 return true;
 
             case OP_EQUALVERIFY:
-                String x = stack.pop();
-                String y = stack.pop();
+                byte[] x = stack.pop();
+                byte[] y = stack.pop();
                 if (x == null || y == null) return false;
-                if (!x.equals(y)) {     //Por temas de interaccion al pushear resultado de EQUAL
+                if (!Arrays.equals(x,y)) {     //Por temas de interaccion al pushear resultado de EQUAL
                     return false;
                 }
                 return true;

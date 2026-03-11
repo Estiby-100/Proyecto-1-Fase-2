@@ -3,7 +3,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         Parser parser = new Parser();
-        Collection<String> stack = new PilaArrayList<>();
+        Collection<byte[]> stack = new PilaArrayList<>();
         Interpreter interpreter = new Interpreter(stack);
         FileReader dataObtainer = new FileReader();
         String script = dataObtainer.ReadFile("target/Script_commands.txt");

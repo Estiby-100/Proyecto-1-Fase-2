@@ -29,7 +29,7 @@ public class Parser {
         // Si empieza con DATA: es dato
         if (word.startsWith("DATA:")) {
             String value = word.substring("DATA:".length());
-            return Token.data(value);
+            return Token.data(decimalToBytes(value));
         }
 
         // Si no es DATA:, asumimos que debe ser un opcode
@@ -39,5 +39,13 @@ public class Parser {
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Unknown token: " + word);
         }
+    }
+
+    private byte[] decimalToBytes(String decimal) {
+        int value = Integer.parseInt(decimal);
+        if (value < 0 || value > 255) {
+            throw new IllegalArgumentException("Decimal fuera de rango (0-255)");
+        }
+        return new byte[]{ (byte) value };
     }
 }

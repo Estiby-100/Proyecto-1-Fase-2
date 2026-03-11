@@ -1,10 +1,11 @@
+import java.util.Arrays;
 public class Token {
 
     private final TokenType type;
     private final OpCode opCode;   
-    private final String data;     
+    private final byte[] data;     
 
-    private Token(TokenType type, OpCode opCode, String data) {
+    private Token(TokenType type, OpCode opCode, byte[] data) {
         this.type = type;
         this.opCode = opCode;
         this.data = data;
@@ -14,7 +15,7 @@ public class Token {
         return new Token(TokenType.OPCODE, op, null);
     }
 
-    public static Token data(String data) {
+    public static Token data(byte[] data) {
         return new Token(TokenType.DATA, null, data);
     }
 
@@ -26,12 +27,12 @@ public class Token {
         return opCode;
     }
 
-    public String getData() {
+    public byte[] getData() {
         return data;
     }
 
     @Override
     public String toString() {
-        return type == TokenType.DATA ? "DATA(" + data + ")" : opCode.name();
+        return (type == TokenType.DATA) ? "DATA(" + Arrays.toString(data) + ")" : opCode.name();
     }
 }
