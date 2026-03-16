@@ -6,15 +6,34 @@ import java.util.List;
 
 public class Interpreter {
 
+    private boolean trace;
     private Collection<byte[]> stack;
     private Collection<Boolean> executionStack = new PilaArrayList<>();
 
-    public Interpreter(Collection<byte[]> stack) {
+    public Interpreter(Collection<byte[]> stack, boolean trace) {
         this.stack = stack;
+        this.trace = trace;
+    }
+
+    private void printStack() {
+        Collection<byte[]> temp = new PilaArrayList<>();
+        System.out.print("STACK: [");
+        while (!stack.isEmpty()) {
+            byte[] val = stack.pop();
+            temp.push(val);
+            System.out.print(val[0] + " ");
+        }
+        while (!temp.isEmpty()) {
+            stack.push(temp.pop());
+        }
+        System.out.println("]");
     }
 
     public boolean execute(List<Token> tokens) {
         for (Token token : tokens) {
+            if (trace) {
+                System.out.println("TOKEN: " + token);
+            }
             boolean executing = true;
             Collection<Boolean> temp = new PilaArrayList<>();
             while (!executionStack.isEmpty()) {
@@ -28,6 +47,9 @@ public class Interpreter {
             if (token.getType() == TokenType.DATA) {
                 if (executing) {
                     stack.push(token.getData());
+                    if (trace){
+                        printStack();
+                    }
                 }
             }
             else if (token.getType() == TokenType.OPCODE) {
@@ -40,10 +62,14 @@ public class Interpreter {
                     continue;
                 }
                 boolean ok = executeOpCode(op);
+                if (trace) {
+                    printStack();
+                }
                 if (!ok) {
                     return false; // falla inmediata
                 }
             }
+            
         }
         // criterio de éxito
         byte[] result = stack.peek();
