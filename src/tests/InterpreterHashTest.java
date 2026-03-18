@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.security.MessageDigest;
-import java.util.Collection;
+
 
 public class InterpreterHashTest {
 
